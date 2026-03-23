@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from post.views import PostViewSet, RegisterView
+from posts.views import PostViewSet, RegisterView, LoginView, LogoutView, UserMeView
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
@@ -11,9 +11,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
 
-    path("api/register/", RegisterView.as_view(), name='register'),
-    path("api/login/", TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/register/', RegisterView.as_view(), name='auth_register'),
+    path('api/login/', LoginView.as_view(), name='auth_login'),
+    path('api/logout/', LogoutView.as_view(), name='auth_logout'),
+    path('api/me/', UserMeView.as_view(), name='auth_me'),
 ]
 
 """

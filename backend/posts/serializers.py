@@ -30,8 +30,8 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'user', 'user_id', 'content', 'parent', 'likes_count', 'replies_count', 'created_at']
 
-        def get_likes_count(self, obj):
-            return obj.likes.likes.count()
+    def get_likes_count(self, obj):
+        return obj.likes.count()
 
-        def get_replies_count(self, obj):
-            return obj.replies.count()
+    def get_replies_count(self, obj):
+        return obj.replies.count()

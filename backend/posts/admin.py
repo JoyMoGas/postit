@@ -1,10 +1,9 @@
 from django.contrib import admin
-from .models import Comment
+from .models import Post
 
-
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ("id", "username", "message", "parent", "date", "likes")
-    search_fields = ("username", "message")
-    list_filter = ("date", "parent")
-    readonly_fields = ("date",)
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "content", "parent", "created_at")
+    search_fields = ("user__username", "content")
+    list_filter = ("created_at", "parent")
+    readonly_fields = ("created_at",)
