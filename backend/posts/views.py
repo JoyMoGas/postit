@@ -20,22 +20,27 @@ class LoginView(TokenObtainPairView):
         if response.status_code == 200:
             access_token = response.data.get('access')
             response.set_cookie(
-                key='access_token',
+                key=settings.SIMPLE_JWT.get('AUTH_COOKIE', 'access_token'),
                 value=access_token,
-                httponly=True,
-                samesite='Lax',
-                secure=False,
-                path='/',
+                httponly=settings.SIMPLE_JWT.get('AUTH_COOKIE_HTTP_ONLY', True),
+                samesite=settings.SIMPLE_JWT.get('AUTH_COOKIE_SAMESITE', 'Lax'),
+                secure=settings.SIMPLE_JWT.get('AUTH_COOKIE_SECURE', False),
+                path=settings.SIMPLE_JWT.get('AUTH_COOKIE_PATH', '/'),
             )
     
             del response.data['access']
-            del response.data['refresh']
+            if 'refresh' in response.data:
+                del response.data['refresh']
         return response
 
 class LogoutView(APIView):
     def post(self, request):
         response = Response({"message": "Sesión cerrada"}, status=status.HTTP_200_OK)
-        response.delete_cookie('access_token')
+        response.delete_cookie(
+            settings.SIMPLE_JWT.get('AUTH_COOKIE', 'access_token'),
+            path=settings.SIMPLE_JWT.get('AUTH_COOKIE_PATH', '/'),
+            samesite=settings.SIMPLE_JWT.get('AUTH_COOKIE_SAMESITE', 'Lax')
+        )
         return response
 
 class UserMeView(APIView):
